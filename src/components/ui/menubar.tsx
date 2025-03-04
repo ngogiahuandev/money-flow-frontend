@@ -43,7 +43,7 @@ function MenubarTrigger({
     <MenubarPrimitive.Trigger
       data-slot='menubar-trigger'
       className={cn(
-        'focus:bg-accent/50 focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground flex cursor-pointer items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none',
+        'focus:bg-accent/50 focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground font-base flex cursor-pointer items-center rounded-sm px-2 py-1 text-sm outline-hidden select-none',
         className
       )}
       {...props}
@@ -159,7 +159,7 @@ function MenubarLabel({
     <MenubarPrimitive.Label
       data-slot='menubar-label'
       data-inset={inset}
-      className={cn('px-2 py-1.5 text-sm font-medium data-[inset]:pl-8', className)}
+      className={cn('font-base px-2 py-1.5 text-sm data-[inset]:pl-8', className)}
       {...props}
     />
   );
