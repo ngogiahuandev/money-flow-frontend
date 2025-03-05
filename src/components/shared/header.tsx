@@ -9,6 +9,7 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
+import AuthenMenu from '@/components/shared/authen-menu';
 
 type MenuItem = {
   title: string;
@@ -95,12 +96,7 @@ export function Header() {
 
         <div className='flex items-center gap-4'>
           <ThemeToggle />
-          <Button variant='outline' asChild>
-            <Link href='/login'>Login</Link>
-          </Button>
-          <Button asChild>
-            <Link href='/register'>Register</Link>
-          </Button>
+          <AuthenMenu />
         </div>
       </div>
     </header>

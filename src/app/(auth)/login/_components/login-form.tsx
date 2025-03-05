@@ -16,6 +16,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { PasswordInput } from '@/components/ui/password-input';
+import { toast } from 'sonner';
+import { useMutation } from '@tanstack/react-query';
+import { AuthApi } from '@/api/auth';
+import { useAuthStore } from '@/stores';
+import { AxiosError } from 'axios';
 
 const schema = z.object({
   email: z.string().email(),
@@ -23,6 +28,7 @@ const schema = z.object({
 });
 
 export default function LoginForm() {
+  const { login } = useAuthStore();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -31,8 +37,23 @@ export default function LoginForm() {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: AuthApi.login,
+    onSuccess: data => {
+      login(data.user, data.tokens);
+      toast.success('Login successful');
+    },
+    onError: (error: AxiosError<null>) => {
+      if (error.response?.status === 401) {
+        toast.error('Invalid Credentials');
+      } else {
+        toast.error('An error occurred');
+      }
+    },
+  });
+
   const onSubmit = (payload: z.infer<typeof schema>) => {
-    console.log(payload);
+    mutation.mutate(payload);
   };
 
   return (
@@ -45,7 +66,7 @@ export default function LoginForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='email@example.com' {...field} />
+                <Input placeholder='email@example.com' {...field} disabled={mutation.isPending} />
               </FormControl>
               {form.formState.errors.email ? (
                 <FormMessage />
@@ -62,7 +83,7 @@ export default function LoginForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='Password' {...field} />
+                <PasswordInput placeholder='Password' {...field} disabled={mutation.isPending} />
               </FormControl>
               {form.formState.errors.password ? (
                 <FormMessage />
@@ -72,7 +93,7 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type='submit' className='w-full'>
+        <Button type='submit' className='w-full' isLoading={mutation.isPending}>
           Submit
         </Button>
       </form>
