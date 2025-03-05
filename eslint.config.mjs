@@ -10,6 +10,7 @@ const compat = new FlatCompat({
 });
 
 import * as prettier from 'eslint-config-prettier';
+import pluginQuery from '@tanstack/eslint-plugin-query';
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 const eslintConfig = [
@@ -18,6 +19,7 @@ const eslintConfig = [
   },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   prettier,
+  pluginQuery,
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
@@ -50,9 +52,10 @@ const eslintConfig = [
 
       // Import/Export
       'import/prefer-default-export': 'off',
-      'import/no-default-export': 'off', // Next.js uses default exports
+      'import/no-default-export': 'off',
 
-      // Code Style handled by Prettier
+      // Query
+      '@tanstack/query/exhaustive-deps': 'error',
     },
   },
 ];

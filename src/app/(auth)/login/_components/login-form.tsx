@@ -67,7 +67,7 @@ export default function LoginForm() {
               {form.formState.errors.password ? (
                 <FormMessage />
               ) : (
-                <FormDescription>This is your passowrd.</FormDescription>
+                <FormDescription>This is your password.</FormDescription>
               )}
             </FormItem>
           )}
