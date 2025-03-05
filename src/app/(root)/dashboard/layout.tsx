@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <section className='pt-8'>
+    <section className='py-8'>
       <AuthenticatedGuard>{children}</AuthenticatedGuard>
     </section>
   );

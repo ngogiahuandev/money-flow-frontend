@@ -6,6 +6,7 @@ import { Header } from '@/components/shared/header';
 import QueryClientProvider from '@/providers/query-client-provider';
 import { Toaster } from '@/components/ui/sonner';
 import AuthProvider from '@/providers/auth-provider';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -32,10 +33,12 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
-            <AuthProvider>
-              <main className='mx-auto max-w-[1200px] px-4 pt-16'>{children}</main>
-            </AuthProvider>
+            <ScrollArea className='h-screen'>
+              <Header />
+              <AuthProvider>
+                <main className='mx-auto max-w-[1200px] px-4 pt-16'>{children}</main>
+              </AuthProvider>
+            </ScrollArea>
             <Toaster richColors position='bottom-right' />
           </ThemeProvider>
         </QueryClientProvider>
