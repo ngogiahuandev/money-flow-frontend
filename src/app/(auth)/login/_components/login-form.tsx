@@ -21,6 +21,7 @@ import { useMutation } from '@tanstack/react-query';
 import { AuthApi } from '@/api/auth';
 import { useAuthStore } from '@/stores';
 import { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
 
 const schema = z.object({
   email: z.string().email(),
@@ -29,6 +30,7 @@ const schema = z.object({
 
 export default function LoginForm() {
   const { login } = useAuthStore();
+  const router = useRouter();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -42,6 +44,7 @@ export default function LoginForm() {
     onSuccess: data => {
       login(data.user, data.tokens);
       toast.success('Login successful');
+      router.push('/dashboard');
     },
     onError: (error: AxiosError<null>) => {
       if (error.response?.status === 401) {

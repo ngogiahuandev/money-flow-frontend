@@ -16,11 +16,23 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { PasswordInput } from '@/components/ui/password-input';
+import { useMutation } from '@tanstack/react-query';
+import { AuthApi } from '@/api/auth';
+import { useAuthStore } from '@/stores';
+import { toast } from 'sonner';
+import { LoginResponse } from '@/types';
+import { useRouter } from 'next/navigation';
 
 const schema = z
   .object({
     email: z.string().email(),
-    username: z.string().min(3),
+    username: z
+      .string()
+      .min(3)
+      .regex(/^[a-zA-Z0-9]+$/, {
+        message:
+          'Username can only contain letters and numbers, no spaces or special characters allowed',
+      }),
     password: z.string().min(6),
     confirmPassword: z.string().min(6),
   })
@@ -30,6 +42,8 @@ const schema = z
   });
 
 export default function RegisterForm() {
+  const { login } = useAuthStore();
+  const router = useRouter();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -40,8 +54,24 @@ export default function RegisterForm() {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: AuthApi.register,
+    onSuccess: data => {
+      toast.success('Account created successfully');
+      login(data.user, data.tokens);
+      router.push('/dashboard');
+    },
+    onError: (error: any) => {
+      if (error.response?.status === 409) {
+        toast.error('Username or email already exists');
+      } else {
+        toast.error('An error occurred');
+      }
+    },
+  });
+
   const onSubmit = (payload: z.infer<typeof schema>) => {
-    console.log(payload);
+    mutation.mutate(payload);
   };
 
   return (
@@ -54,7 +84,7 @@ export default function RegisterForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='email@example.com' {...field} />
+                <Input placeholder='email@example.com' {...field} disabled={mutation.isPending} />
               </FormControl>
               {form.formState.errors.email ? (
                 <FormMessage />
@@ -71,7 +101,7 @@ export default function RegisterForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder='johndoe' {...field} />
+                <Input placeholder='johndoe' {...field} disabled={mutation.isPending} />
               </FormControl>
               {form.formState.errors.username ? (
                 <FormMessage />
@@ -88,7 +118,7 @@ export default function RegisterForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='Password' {...field} />
+                <PasswordInput placeholder='Password' {...field} disabled={mutation.isPending} />
               </FormControl>
               {form.formState.errors.password ? (
                 <FormMessage />
@@ -105,7 +135,11 @@ export default function RegisterForm() {
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='Confirm password' {...field} />
+                <PasswordInput
+                  placeholder='Confirm password'
+                  {...field}
+                  disabled={mutation.isPending}
+                />
               </FormControl>
               {form.formState.errors.confirmPassword ? (
                 <FormMessage />
@@ -115,7 +149,7 @@ export default function RegisterForm() {
             </FormItem>
           )}
         />
-        <Button type='submit' className='w-full'>
+        <Button type='submit' className='w-full' isLoading={mutation.isPending}>
           Register
         </Button>
       </form>

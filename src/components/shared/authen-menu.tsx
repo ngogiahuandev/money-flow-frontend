@@ -27,8 +27,8 @@ export default function AuthenMenu() {
       {isAuthenticated ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Avatar className='cursor-pointer rounded border'>
-              <AvatarImage src='https://github.com/shadcn.png' />
+            <Avatar className='bg-muted cursor-pointer rounded'>
+              <AvatarImage src={user?.avatar} />
               <AvatarFallback className='rounded'>CN</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
