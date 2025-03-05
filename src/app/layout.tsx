@@ -34,7 +34,7 @@ export default function RootLayout({
           >
             <Header />
             <AuthProvider>
-              <main className='mx-auto max-w-[1200px] pt-16'>{children}</main>
+              <main className='mx-auto max-w-[1200px] px-4 pt-16'>{children}</main>
             </AuthProvider>
             <Toaster richColors position='bottom-right' />
           </ThemeProvider>

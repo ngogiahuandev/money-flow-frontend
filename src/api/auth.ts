@@ -4,6 +4,7 @@ import {
   LoginResponse,
   MeResponse,
   RefreshTokensPayload,
+  RefreshTokensResponse,
   RegisterPayload,
   RegisterResponse,
   User,
@@ -20,7 +21,7 @@ export const AuthApi = {
   },
 
   async refreshTokens(payload: RefreshTokensPayload) {
-    const response = await axiosInstance.post<RefreshTokensPayload>(
+    const response = await axiosInstance.post<RefreshTokensResponse>(
       '/auth/refresh-tokens',
       payload
     );
